@@ -70,7 +70,7 @@ for img_n in sorted(os.listdir(test_path)):
     ssim = util.calculate_ssim(hr, sr, crop_border=0)
 
     p += psnr
-    s + ssim
+    s += ssim
     f.write('{}: PSNR, {}; SSIM, {}.\n'.format(img_n, psnr, ssim))
 
     cv2.imwrite(os.path.join(output_path, img_n), sr)
