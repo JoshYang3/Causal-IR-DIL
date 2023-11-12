@@ -53,12 +53,12 @@ You may download commonly used testing datasets following [this link](https://dr
 
 - Single GPU training
 ```bash
-CUDA_VISIBLE_DEVICES=0 python DIL_sr_noise.py --ckpt_save <path to save your checkpoints> --trainset <path to your cropped DF2K> --batch_size 8 
+CUDA_VISIBLE_DEVICES=0 python DIL_sf_noise.py --ckpt_save <path to save your checkpoints> --trainset <path to your cropped DF2K> --batch_size 8 
 ```
 
 - Distributed training (4 GPUs as an example)
 ```bash
-CUDA_VISIBLE_DEVICES=0,1,2,3 python -m torch.distributed.launch --nproc_per_node=4 DIL_sr_noise.py --ckpt_save <path to save your checkpoints> --trainset <path to your cropped DF2K> --batch_size 8 --gpus 4 --distributed
+CUDA_VISIBLE_DEVICES=0,1,2,3 python -m torch.distributed.launch --nproc_per_node=4 DIL_sf_noise.py --ckpt_save <path to save your checkpoints> --trainset <path to your cropped DF2K> --batch_size 8 --gpus 4 --distributed
 ```
 
 Please refer to code for more information.
