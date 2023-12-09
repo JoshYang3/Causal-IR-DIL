@@ -64,12 +64,21 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 python -m torch.distributed.launch --nproc_per_node
 Please refer to code for more information.
 
 ### Testing
+For single epoch testing
 ```bash
 python eval_noise.py --ckpt <path to your checkpoint> --testset <path to your testset> --save <path to save results> --level <gaussian noise level>
 ```
 As for "level", you may try distortion levels used in training (5, 10, 15, 20), or distortion levels that are unseen during training (where DIL shows its strength!).
 
+For testing all testsets on all epoches
+```bash
+./evaluation_low_distortion.sh
+```
 
+For testing on CBSD68, Urban100, Manga109 like the paper did in table 1
+```bash
+./evaluation_table1.sh
+```
 
 
 ## Cite US
