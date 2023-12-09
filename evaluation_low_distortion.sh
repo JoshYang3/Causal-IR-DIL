@@ -22,7 +22,7 @@ run_script() {
     echo "Processed with model $(basename $model) on ${testset_path}, results saved in ${save_path}"
 }
 
-for num in {3..10}; do
+for num in {1..10}; do
     model_path="${ckpt_base}/model_${num}.pt"
 
     # Set14 testsets
