@@ -2,8 +2,8 @@ import cv2
 import os
 
 
-folder = '<path to your downloaded DF2K dataset>'
-dest_folder = '<path to your output cropped training dataset>'
+folder = '/scratch/cky5217/597/Causal-IR-DIL/DF'
+dest_folder = '/scratch/cky5217/597/Causal-IR-DIL/cropped'
 
 if not os.path.exists(dest_folder):
     os.makedirs(dest_folder)
@@ -15,6 +15,11 @@ count = 1
 
 for img_n in sorted(os.listdir(folder)):
     img = cv2.imread(os.path.join(folder, img_n))
+    
+    if img is None:
+        print("Warning: Could not load image", img_n)
+        continue  # Skip this image and move to the next one
+        
     h, w, _ = img.shape
     h_number = h // patchsize
     w_number = w // patchsize

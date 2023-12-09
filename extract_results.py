@@ -1,41 +1,47 @@
 import os
 import pandas as pd
 
-# List of base directory names
-base_directories = ['results_5', 'results_10', 'results_15', 'results_20', 'results_25']
+# Function to clean SSIM values
+def clean_ssim(value):
+    try:
+        return float(value.rstrip('.'))
+    except ValueError:
+        return None
 
-# Iterate over each base directory
-for base_dir in base_directories:
-    data = []
-    base_directory = f'/scratch/cky5217/597/Causal-IR-DIL/{base_dir}/'
+base_dir = "/home/featurize/work/Causal-IR-DIL-main/results_50"  # Replace with the path to your directories
 
-    # Iterate over each directory number
-    for i in range(1, 31):
-        log_file_path = os.path.join(base_directory, str(i), 'log.txt')
+directories = [d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, d))]
 
-        # Read the last line of the log file
+# DataFrame to store the results
+results = pd.DataFrame(columns=["Directory", "PSNR", "SSIM"])
+
+for dir in directories:
+    log_file_path = os.path.join(base_dir, dir, "log.txt")
+
+    if not os.path.isfile(log_file_path):
+        print(f"log.txt not found in {dir}")
+        continue
+
+    try:
         with open(log_file_path, 'r') as file:
-            last_line = file.readlines()[-1].strip()
+            last_line = None
+            for line in file:
+                last_line = line.strip()
+            
+            if last_line is None:
+                raise ValueError("Empty log file")
 
-        # Extract and convert PSNR and SSIM values
-        parts = last_line.split(',')
-        psnr = float(parts[0].split(':')[-1].strip())
-        ssim_str = parts[1].split(':')[-1].strip()
+            # Parse PSNR and SSIM
+            parts = last_line.split(", ")
+            if len(parts) < 2:
+                raise ValueError("Unexpected format in log file")
 
-        # Remove the trailing dot if it exists
-        if ssim_str.endswith('.'):
-            ssim_str = ssim_str[:-1]
+            psnr = parts[0].split(": ")[1]
+            ssim = clean_ssim(parts[1].split(": ")[1])
 
-        ssim = float(ssim_str)
+            new_row = pd.DataFrame({"Directory": [dir], "PSNR": [psnr], "SSIM": [ssim]})
+            results = pd.concat([results, new_row], ignore_index=True)
+    except Exception as e:
+        print(f"Error processing {dir}: {e}")
 
-        # Append the data to the list
-        data.append({'Round': i, 'PSNR': psnr, 'SSIM': ssim})
-
-    # Create a DataFrame from the data
-    df = pd.DataFrame(data)
-
-    # Output file name based on base directory
-    output_file = f'output_{base_dir.split("_")[-1]}.xlsx'
-
-    # Write the DataFrame to an Excel file
-    df.to_excel(output_file, index=False)
+results.to_excel("/home/featurize/work/Causal-IR-DIL-main/results_50.xlsx", index=False)

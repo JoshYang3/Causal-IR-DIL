@@ -139,7 +139,7 @@ def main():
     for i in range(4):
         dataset_list.append(srdata_noise.DataCrop(i, hr_folder=args.trainset, patch_size=args.patch_size))
 
-    testset = srdata_noise.DataTest(hr_folder=args.testset, level=70)  # you can try 50, 70 ...
+    testset = srdata_noise.DataTest(hr_folder=args.testset, level=50)  # you can try 50, 70 ...
 
     dataloader_test = data.DataLoader(
         testset, 
